@@ -14,13 +14,19 @@ function Contact(name,surname,mobile_home,email,address,mobile_work)  /*Model Fo
     this.mobile_work = mobile_work;
 }
 
-
+/*Handler for CRUD operations on contact list*/
 var contactListHandler = (function(){
     var id;
     var contactList;
     function createContactList()
     {
-        return [];
+        if(localStorage["contactList"] == undefined) {
+            return {};
+        }
+        else
+        {
+            return JSON.parse(localStorage["contactList"]);
+        }
     }
     function getID()
     {
@@ -33,15 +39,36 @@ var contactListHandler = (function(){
         }
         return id;
     }
+    function getList()
+    {
+        return JSON.parse(localStorage["contactList"]);
+    }
+    function addToList(contact)
+    {
+        contactList[contact.id]=(contact);
+        localStorage.setItem('contactList',JSON.stringify(contactList));
+    }
+    function deleteFromList(contact)
+    {
+        delete contactList[contact.id];
+        localStorage.setItem('contactList',JSON.stringify(contactList));
+    }
     return {
+        deleteContact : function(contact) {
+            if (!contactList) {
+                contactList = createContactList();
+            }
+            deleteFromList(contact);
+        },
         addContact : function(contact) {
             if (!contactList) {
                 contactList = createContactList();
             }
-            contactList.push(contact);
+            addToList(contact);
+
         },
         getContactList : function(name) {
-            return contactList;
+            return getList();
         },
         getId : function(){
             return getID();
