@@ -18,8 +18,6 @@ var viewHandler = {
         populateUserDetails(contactListHandler);
 
     },
-
-
     addContact:function() {
         var name = document.getElementById("name").value;
         var surname = document.getElementById("surname").value;
