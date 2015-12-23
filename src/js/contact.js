@@ -48,17 +48,18 @@ var contactListHandler = (function(){
         contactList[contact.id]=(contact);
         localStorage.setItem('contactList',JSON.stringify(contactList));
     }
-    function deleteFromList(contact)
+    function deleteFromList(id)
     {
-        delete contactList[contact.id];
+        delete contactList[id];
         localStorage.setItem('contactList',JSON.stringify(contactList));
     }
+    function getContact(id)
+    {
+        return JSON.parse(localStorage["contactList"])[id];
+    }
     return {
-        deleteContact : function(contact) {
-            if (!contactList) {
-                contactList = createContactList();
-            }
-            deleteFromList(contact);
+        deleteContact : function(id) {
+            deleteFromList(id);
         },
         addContact : function(contact) {
             if (!contactList) {
@@ -67,8 +68,11 @@ var contactListHandler = (function(){
             addToList(contact);
 
         },
-        getContactList : function(name) {
+        getContactList : function() {
             return getList();
+        },
+        getContact : function(id){
+            return getContact(id);
         },
         getId : function(){
             return getID();

@@ -1,3 +1,4 @@
+
 @import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
 
 body {
@@ -94,13 +95,10 @@ ul.c-controls li a:hover {
 }
 
 
-.red{
-    color:red;
-}
-.form-area
-{
-    background-color: #FAFAFA;
-    padding: 10px 40px 60px;
-    margin: 10px 0px 60px;
-    border: 1px solid GREY;
+.glyphicon {  margin-bottom: 10px;margin-right: 10px;}
+
+small {
+    display: block;
+    line-height: 1.428571429;
+    color: #999;
 }

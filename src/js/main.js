@@ -1,23 +1,49 @@
 
 var viewHandler = {
+    currentContact : 1,
     initiateApp:function() {
-        populateSuggestor();
+        viewHandler.populateSuggestor();
+        viewHandler.updateDetailView(viewHandler.currentContact);
     },
 
     populateSuggestor:function() {
-        var suggesionListHtml = "";
-        var miniList = contactListHandler.getminiList();
-        for (var contact in miniList) {
-            suggesionListHtml += '<option onclick="handleContactSelection(' + contact + ')"   value="' + miniList[contact] + '" />';
+        var list = contactListHandler.getContactList();
+        for(var key in list)
+        {
+            viewHandler.updateContactListView(list[key]);
         }
-        document.getElementById('contactList').innerHTML = suggesionListHtml;
     },
 
-
-    handleContactSelection:function(contact) {
-        populateUserDetails(contactListHandler);
+    editContact : function(){
+        var contact = contactListHandler.getContact(viewHandler.currentContact);
+        document.getElementById("name").value = contact.name;
+        document.getElementById("surname").value = contact.surname;
+        document.getElementById("mobile").value = contact.mobile_home;
+        document.getElementById("email").value = contact.emailID;
+        document.getElementById("address").value = contact.address;
+        document.getElementById("mobileOffice").value = contact.mobile_work;
+        $('#addressForm').modal('show');
+        $('#submit').hide();
+        $('#edit').show();
 
     },
+    deleteContact : function(){
+        contactListHandler.deleteContact(viewHandler.currentContact);
+        var elem = document.getElementById('list'+viewHandler.currentContact);
+        elem.parentNode.removeChild(elem);
+        viewHandler.currentContact +=1;
+    },
+
+    updateDetailView : function(id)
+    {
+        viewHandler.currentContact = id;
+        var contact = contactListHandler.getContact(id);
+        document.getElementById("detail_name").innerHTML = contact.name+" "+contact.surname;
+        document.getElementById("detail_address").innerHTML  = contact.address;
+        document.getElementById("detail_mobile").innerHTML  = contact.mobile_home;
+        document.getElementById("detail_email").innerHTML  = contact.emailID;
+    },
+
     addContact:function() {
         var name = document.getElementById("name").value;
         var surname = document.getElementById("surname").value;
@@ -32,7 +58,7 @@ var viewHandler = {
 
     updateContactListView:function(contact) {
         var contactHtml = "";
-        contactHtml +='<li class="list-group-item">'
+        contactHtml +='<li id="list'+contact.id+'" class="list-group-item" onclick="viewHandler.updateDetailView('+contact.id+')">'
         contactHtml +='    <div class="col-xs-12 col-sm-3">'
         contactHtml +='    <img src="http://www.pixelwebdesign.in/images/thumb.png" alt="'+contact.name+' '+contact.surname+'" class="img-responsive img-circle" />'
         contactHtml +='    </div>'
@@ -48,19 +74,6 @@ var viewHandler = {
         contactHtml +='<div class="clearfix"></div>'
         contactHtml +='</li>'
         $('#contact-list').append(contactHtml);
-    },
-
-    cancelAddContact:function() {
-        document.getElementById("addcontactSection").style.display = 'none';
-    },
-
-
-    openAddContactForm:function() {
-        document.getElementById("addcontactSection").style.display = 'block';
-    },
-
-    openEditContactForm : function(){
-        document.getElementById("addcontactSection").style.display = 'block';
     },
 
     reloadContacts:function() {
