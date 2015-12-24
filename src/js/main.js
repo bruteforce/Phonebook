@@ -1,17 +1,50 @@
 
 var viewHandler = {
-    currentContact : 1,
+    currentContact : -1,
     initiateApp:function() {
-        viewHandler.populateSuggestor();
-        viewHandler.updateDetailView(viewHandler.currentContact);
+        var list = contactListHandler.getContactList();
+        viewHandler.populateSuggestor(list);
+        for (var key in list) {
+            viewHandler.currentContact = key;
+            viewHandler.updateDetailView(key);
+            break;
+        }
+
     },
 
-    populateSuggestor:function() {
-        var list = contactListHandler.getContactList();
+    populateSuggestor:function(list) {
+
+        var listArray = viewHandler.sortContact(list);
+        for(var key in listArray)
+        viewHandler.updateContactListView(listArray[key]);
+        /*Activate Search*/
+        $('#contact-list').searchable({
+            searchField: '#contact-list-search',
+            selector: 'li',
+            childSelector: '.col-xs-12',
+            show: function( elem ) {
+                elem.slideDown(100);
+            },
+            hide: function( elem ) {
+                elem.slideUp( 100 );
+            }
+        })
+    },
+
+    sortContact:function(list){
+        var listArray =[];
         for(var key in list)
         {
-            viewHandler.updateContactListView(list[key]);
+            if(viewHandler.currentContact == -1)
+                viewHandler.currentContact=key;
+            listArray.push(list[key]);
         }
+        listArray.sort(function(a, b){
+            if(a.name < b.name) return -1;
+            if(a.name > b.name) return 1;
+            return 0;
+        });
+        return listArray;
     },
 
     editContact : function(){
@@ -23,15 +56,36 @@ var viewHandler = {
         document.getElementById("address").value = contact.address;
         document.getElementById("mobileOffice").value = contact.mobile_work;
         $('#addressForm').modal('show');
-        $('#submit').hide();
-        $('#edit').show();
+        $('#edit').removeClass('hide');
+        $('#submit').addClass('hide');
 
     },
     deleteContact : function(){
         contactListHandler.deleteContact(viewHandler.currentContact);
         var elem = document.getElementById('list'+viewHandler.currentContact);
         elem.parentNode.removeChild(elem);
-        viewHandler.currentContact +=1;
+        var contact= contactListHandler.getNextContact();
+        if(contact === undefined) {
+            $('#detailView').addClass('hide');
+            return;
+        }
+        viewHandler.currentContact = contact.id;
+        viewHandler.updateDetailView(contact.id);
+    },
+
+    updateContact:function()
+    {
+        var name = document.getElementById("name").value;
+        var surname = document.getElementById("surname").value;
+        var mobile_home = document.getElementById("mobile").value;
+        var email = document.getElementById("email").value;
+        var address = document.getElementById("address").value;
+        var mobile_work = document.getElementById("mobileOffice").value;
+        var contact = new Contact(viewHandler.currentContact,name, surname, mobile_home, email, address, mobile_work);
+        contactListHandler.updateContact(contact);
+        //viewHandler.updateContactListView(contact);
+        //viewHandler.updateDetailView(contact.id);
+        location.reload();
     },
 
     updateDetailView : function(id)
@@ -45,18 +99,22 @@ var viewHandler = {
     },
 
     addContact:function() {
+        $('#detailView').removeClass('hide');
         var name = document.getElementById("name").value;
         var surname = document.getElementById("surname").value;
         var mobile_home = document.getElementById("mobile").value;
         var email = document.getElementById("email").value;
         var address = document.getElementById("address").value;
         var mobile_work = document.getElementById("mobileOffice").value;
-        var contact = new Contact(name, surname, mobile_home, email, address, mobile_work);
+        var contact = new Contact(-1, name, surname, mobile_home, email, address, mobile_work);
         contactListHandler.addContact(contact);
-        viewHandler.updateContactListView(contact);
+        //viewHandler.updateContactListView(contact);
+        //viewHandler.updateDetailView(contact.id);
+        location.reload();
     },
 
     updateContactListView:function(contact) {
+        $('#list'+contact.id).remove();
         var contactHtml = "";
         contactHtml +='<li id="list'+contact.id+'" class="list-group-item" onclick="viewHandler.updateDetailView('+contact.id+')">'
         contactHtml +='    <div class="col-xs-12 col-sm-3">'
@@ -76,39 +134,5 @@ var viewHandler = {
         $('#contact-list').append(contactHtml);
     },
 
-    reloadContacts:function() {
-
-    }
 
 }
-
-$(function () {
-    $('[data-toggle="tooltip"]').tooltip();
-    $('a[href="#addressForm"]').on('click', function(event) {
-        event.preventDefault();
-        $('#addressForm').modal('show');
-    })
-
-    $('[data-command="toggle-search"]').on('click', function(event) {
-        event.preventDefault();
-        $(this).toggleClass('hide-search');
-
-        if ($(this).hasClass('hide-search')) {
-            $('.c-search').closest('.row').slideUp(100);
-        }else{
-            $('.c-search').closest('.row').slideDown(100);
-        }
-    })
-
-    $('#contact-list').searchable({
-        searchField: '#contact-list-search',
-        selector: 'li',
-        childSelector: '.col-xs-12',
-        show: function( elem ) {
-            elem.slideDown(100);
-        },
-        hide: function( elem ) {
-            elem.slideUp( 100 );
-        }
-    })
-});

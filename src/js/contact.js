@@ -3,9 +3,10 @@
  */
 
 
-function Contact(name,surname,mobile_home,email,address,mobile_work)  /*Model For contact*/
+function Contact(id,name,surname,mobile_home,email,address,mobile_work)  /*Model For contact*/
 {
-    this.id = contactListHandler.getId();
+    if(parseInt(id) !== -1) this.id = id;
+    else this.id = contactListHandler.getId();
     this.name = name;
     this.surname = surname;
     this.mobile_home = mobile_home;
@@ -30,14 +31,12 @@ var contactListHandler = (function(){
     }
     function getID()
     {
-        if(id===undefined)
-        {
-            id=1;
+        contactList= JSON.parse(localStorage["contactList"]);
+        for (var key in contactList) {
+            id=key;
         }
-        else {
-            id = id + 1;
-        }
-        return id;
+
+        return parseInt(id)+1;
     }
     function getList()
     {
@@ -50,12 +49,26 @@ var contactListHandler = (function(){
     }
     function deleteFromList(id)
     {
+        contactList = JSON.parse(localStorage["contactList"]);
         delete contactList[id];
         localStorage.setItem('contactList',JSON.stringify(contactList));
     }
     function getContact(id)
     {
         return JSON.parse(localStorage["contactList"])[id];
+    }
+    function updateContact(contact)
+    {
+        contactList= JSON.parse(localStorage["contactList"]);
+        contactList[contact.id] = contact;
+        localStorage.setItem('contactList',JSON.stringify(contactList));
+    }
+    function getNextContact()
+    {
+        contactList= JSON.parse(localStorage["contactList"]);
+        for (var key in contactList) {
+            return contactList[key];
+        }
     }
     return {
         deleteContact : function(id) {
@@ -76,6 +89,14 @@ var contactListHandler = (function(){
         },
         getId : function(){
             return getID();
+        },
+        updateContact : function(contact){
+            return updateContact(contact);
+        },
+        getNextContact: function()
+        {
+            return getNextContact();
+
         }
     }
 })();
