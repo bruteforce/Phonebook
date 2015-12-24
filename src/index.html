@@ -3,11 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="robots" content="noindex">
-
     <title>PhoneBook App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <link href="/css/main.css" rel="stylesheet" >
+    <link href="https://dl.dropboxusercontent.com/u/82903516/src/css/main.css" rel="stylesheet" >
     <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
     <script type="text/javascript">
@@ -24,7 +23,6 @@
     </style>
 </head>
 <body onload="viewHandler.initiateApp()">
-
 <div class="container">
     <div class="row">
         <div class="col-xs-12 col-sm-12  col-md-12">
@@ -118,19 +116,17 @@
                                         <input type="text" class="form-control" id="surname" name="surname" placeholder="Surname" required>
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="email" name="email" placeholder="Email" required>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Mobile Number" required>
+                                        <input type="text" class="form-control" id="mobile" name="mobile" maxlength="10" placeholder="Mobile Number" required>
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" id="mobileOffice" name="mobileOffice" placeholder="Office Mobile Number" required>
+                                        <input type="text" class="form-control" id="mobileOffice" name="mobileOffice" maxlength="10" placeholder="Office Mobile Number" required>
                                     </div>
                                     <div class="form-group">
                                         <textarea class="form-control" type="textarea" id="address" placeholder="Address" maxlength="100" rows="3"></textarea>
-                                        <span class="help-block"><p id="characterLeft" class="help-block ">You have reached the limit</p></span>
                                     </div>
-
                                     <button type="button" id="submit" onclick="viewHandler.addContact(); $('#addressForm').modal('hide');" name="submit" class="btn btn-primary pull-right">Submit Form</button>
                                     <button type="button" id="edit" onclick="viewHandler.updateContact(); $('#addressForm').modal('hide');" name="update" class="btn btn-primary pull-right hide">Update Form</button>
 
@@ -166,12 +162,10 @@
         $('.c-search').closest('.row').slideDown(100);
 
     });
-
-
 </script>
 
-<script src="/js/main.js"></script>
-<script src="/js/contact.js"></script>
+<script src="https://dl.dropboxusercontent.com/u/82903516/src/js/main.js"></script>
+<script src="https://dl.dropboxusercontent.com/u/82903516/src/js/contact.js"></script>
 <script src="//rawgithub.com/stidges/jquery-searchable/master/dist/jquery.searchable-1.0.0.min.js"></script>
 </body>
 </html>

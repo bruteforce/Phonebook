@@ -1,11 +1,11 @@
 
 var viewHandler = {
-    currentContact : -1,
+    currentContactIndex : -1,
     initiateApp:function() {
         var list = contactListHandler.getContactList();
         viewHandler.populateSuggestor(list);
         for (var key in list) {
-            viewHandler.currentContact = key;
+            viewHandler.currentContactIndex = key;
             viewHandler.updateDetailView(key);
             break;
         }
@@ -35,8 +35,8 @@ var viewHandler = {
         var listArray =[];
         for(var key in list)
         {
-            if(viewHandler.currentContact == -1)
-                viewHandler.currentContact=key;
+            if(viewHandler.currentContactIndex == -1)
+                viewHandler.currentContactIndex=key;
             listArray.push(list[key]);
         }
         listArray.sort(function(a, b){
@@ -48,7 +48,7 @@ var viewHandler = {
     },
 
     editContact : function(){
-        var contact = contactListHandler.getContact(viewHandler.currentContact);
+        var contact = contactListHandler.getContact(viewHandler.currentContactIndex);
         document.getElementById("name").value = contact.name;
         document.getElementById("surname").value = contact.surname;
         document.getElementById("mobile").value = contact.mobile_home;
@@ -61,15 +61,15 @@ var viewHandler = {
 
     },
     deleteContact : function(){
-        contactListHandler.deleteContact(viewHandler.currentContact);
-        var elem = document.getElementById('list'+viewHandler.currentContact);
+        contactListHandler.deleteContact(viewHandler.currentContactIndex);
+        var elem = document.getElementById('list'+viewHandler.currentContactIndex);
         elem.parentNode.removeChild(elem);
         var contact= contactListHandler.getNextContact();
         if(contact === undefined) {
             $('#detailView').addClass('hide');
             return;
         }
-        viewHandler.currentContact = contact.id;
+        viewHandler.currentContactIndex = contact.id;
         viewHandler.updateDetailView(contact.id);
     },
 
@@ -81,7 +81,7 @@ var viewHandler = {
         var email = document.getElementById("email").value;
         var address = document.getElementById("address").value;
         var mobile_work = document.getElementById("mobileOffice").value;
-        var contact = new Contact(viewHandler.currentContact,name, surname, mobile_home, email, address, mobile_work);
+        var contact = new Contact(viewHandler.currentContactIndex,name, surname, mobile_home, email, address, mobile_work);
         contactListHandler.updateContact(contact);
         //viewHandler.updateContactListView(contact);
         //viewHandler.updateDetailView(contact.id);
@@ -90,7 +90,7 @@ var viewHandler = {
 
     updateDetailView : function(id)
     {
-        viewHandler.currentContact = id;
+        viewHandler.currentContactIndex = id;
         var contact = contactListHandler.getContact(id);
         document.getElementById("detail_name").innerHTML = contact.name+" "+contact.surname;
         document.getElementById("detail_address").innerHTML  = contact.address;

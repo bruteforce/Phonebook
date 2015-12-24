@@ -2,8 +2,8 @@
  * Created by quikr on 19/12/15.
  */
 
-
-function Contact(id,name,surname,mobile_home,email,address,mobile_work)  /*Model For contact*/
+/*Model For contact*/
+function Contact(id,name,surname,mobile_home,email,address,mobile_work)
 {
     if(parseInt(id) !== -1) this.id = id;
     else this.id = contactListHandler.getId();
@@ -31,6 +31,8 @@ var contactListHandler = (function(){
     }
     function getID()
     {
+        if(localStorage["contactList"]=== undefined)
+            return 1;
         contactList= JSON.parse(localStorage["contactList"]);
         for (var key in contactList) {
             id=key;
@@ -40,6 +42,8 @@ var contactListHandler = (function(){
     }
     function getList()
     {
+        if(localStorage["contactList"]=== undefined)
+        return {};
         return JSON.parse(localStorage["contactList"]);
     }
     function addToList(contact)
